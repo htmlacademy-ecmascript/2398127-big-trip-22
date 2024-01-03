@@ -4,10 +4,9 @@ import FormEditView from '../view/form-edit-view.js';
 import PointView from '../view/point-view.js';
 import {render} from '../render.js';
 
-export default class BoardPresener {
+export default class BoardPresenter {
   sortComponent = new SortView();
   editListComponent = new EditListView();
-  formEditComponent = new FormEditView();
 
   constructor({ container, pointsModel }) {
     this.container = container;
@@ -18,12 +17,18 @@ export default class BoardPresener {
     this.boardPoints = [...this.pointsModel.getPoints()];
     render(this.sortComponent, this.container);
     render(this.editListComponent, this.container);
-    render(this.formEditComponent, this.editListComponent.getElement());
+    render(new FormEditView({
+      point: this.boardPoints[0],
+      destination: this.pointsModel.getDestinationById(this.boardPoints[0].destination),
+      checkedOffers: [...this.pointsModel.getOfferById(this.boardPoints[0].type, this.boardPoints[0].offers)],
+      offers: this.pointsModel.getOfferByType(this.boardPoints[0].type),
+    }), this.editListComponent.getElement());
 
-    for (let i = 0; i < this.boardPoints.length; i++) {
+    for (let i = 1; i < this.boardPoints.length; i++) {
       render(new PointView({
         point: this.boardPoints[i],
-        destination: this.pointsModel.getDestinationById(this.boardPoints[i].destination)
+        destination: this.pointsModel.getDestinationById(this.boardPoints[i].destination),
+        offers: [...this.pointsModel.getOfferById(this.boardPoints[i].type, this.boardPoints[i].offers)]
       }), this.editListComponent.getElement());
     }
   }

@@ -8,7 +8,7 @@ function createEditListTemplate () {
   );
 }
 
-export default class EditList {
+export default class EditListView {
   getTemplate() {
     return createEditListTemplate();
   }
