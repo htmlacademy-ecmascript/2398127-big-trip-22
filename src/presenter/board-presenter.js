@@ -9,17 +9,22 @@ export default class BoardPresener {
   editListComponent = new EditListView();
   formEditComponent = new FormEditView();
 
-  constructor({ container }) {
+  constructor({ container, pointsModel }) {
     this.container = container;
+    this.pointsModel = pointsModel;
   }
 
   init() {
+    this.boardPoints = [...this.pointsModel.getPoints()];
     render(this.sortComponent, this.container);
     render(this.editListComponent, this.container);
     render(this.formEditComponent, this.editListComponent.getElement());
 
-    for (let i = 0; i < 3; i++) {
-      render(new PointView(), this.editListComponent.getElement());
+    for (let i = 0; i < this.boardPoints.length; i++) {
+      render(new PointView({
+        point: this.boardPoints[i],
+        destination: this.pointsModel.getDestinationById(this.boardPoints[i].destination)
+      }), this.editListComponent.getElement());
     }
   }
 }
