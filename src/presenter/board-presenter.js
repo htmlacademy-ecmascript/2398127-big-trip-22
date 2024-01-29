@@ -3,7 +3,7 @@ import EditListView from '../view/list-edit-view.js';
 import EditFormView from '../view/form-edit-view.js';
 import PointView from '../view/point-view.js';
 import NoPointView from '../view/no-point-view.js';
-import {render, replace} from '../framework/render.js';
+import {render, replace, RenderPosition} from '../framework/render.js';
 
 export default class BoardPresenter {
   #container;
@@ -65,17 +65,32 @@ export default class BoardPresenter {
     render(pointComponent, this.#editListComponent.element);
   }
 
+  #renderSort() {
+    render(this.#sortComponent, this.#container, RenderPosition.AFTERBEGIN);
+  }
+
+  #renderListEdit() {
+    render(this.#editListComponent, this.#container);
+  }
+
+  #renderPoints() {
+    this.#boardPoints.forEach((point) => {
+      this.#renderPoint(point);
+    });
+  }
+
+  #renderNoPoints() {
+    render(this.#noPointComponent, this.#container);
+  }
+
   #renderBoard() {
     if (this.#boardPoints.length === 0) {
-      render(this.#noPointComponent, this.#container);
+      this.#renderNoPoints();
       return;
     }
 
-    render(this.#sortComponent, this.#container);
-    render(this.#editListComponent, this.#container);
-
-    for (let i = 0; i < this.#boardPoints.length; i++) {
-      this.#renderPoint(this.#boardPoints[i]);
-    }
+    this.#renderSort();
+    this.#renderListEdit();
+    this.#renderPoints();
   }
 }
