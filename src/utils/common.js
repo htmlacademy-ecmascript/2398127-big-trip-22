@@ -11,10 +11,14 @@ const humanizeTime = (date) => dayjs(date).format(TIME_FORMAT);
 const isFuture = (point) => dayjs().isBefore(point.startDate);
 const isPresent = (point) => dayjs().isAfter(point.startDate) && dayjs().isBefore(point.endDate);
 const isPast = (point) => dayjs().isAfter(point.endDate);
-
+const getPointDuration = (point) => dayjs(point.startDate).diff(dayjs(point.endDate));
+const sortByDay = (pointA, pointB) => dayjs(pointA.startDate).diff(dayjs(pointB.startDate));
+const sortByTime = (pointA, pointB) => getPointDuration(pointA) - getPointDuration(pointB);
+const sortByPrice = (pointB, pointA) => pointA.price - pointB.price;
 function updateItem(items, update) {
   return items.map((item) => item.id === update.id ? update : item);
 }
 
-export {updateItem, isFuture, isPresent, isPast, getRandomArrayElement, humanizePointsDate, humanizeShortDate, humanizeTime };
+
+export { sortByDay, sortByTime, sortByPrice, updateItem, isFuture, isPresent, isPast, getRandomArrayElement, humanizePointsDate, humanizeShortDate, humanizeTime };
 
