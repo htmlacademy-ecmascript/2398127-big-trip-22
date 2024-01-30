@@ -1,7 +1,5 @@
 import SortView from '../view/sort-view.js';
 import EditListView from '../view/list-edit-view.js';
-// import EditFormView from '../view/form-edit-view.js';
-// import PointView from '../view/point-view.js';
 import NoPointView from '../view/no-point-view.js';
 import {render, RenderPosition} from '../framework/render.js';
 import PointPresenter from './point-presenter.js';
