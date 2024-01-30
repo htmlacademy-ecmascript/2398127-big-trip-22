@@ -13,5 +13,9 @@ const Mode = {
   DEFAULT: 'DEFAULT',
   EDITING: 'EDITING',
 };
-
-export { Mode, FilterType, CITY_NAMES, POINT_COUNT, DATE_FORMAT, SHORT_DATE_FORMAT, TIME_FORMAT};
+const SortType = {
+  DAY: 'day',
+  TIME: 'time',
+  PRICE: 'price',
+};
+export { SortType, Mode, FilterType, CITY_NAMES, POINT_COUNT, DATE_FORMAT, SHORT_DATE_FORMAT, TIME_FORMAT};
