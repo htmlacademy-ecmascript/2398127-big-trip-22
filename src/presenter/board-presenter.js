@@ -3,15 +3,17 @@ import EditListView from '../view/list-edit-view.js';
 import NoPointView from '../view/no-point-view.js';
 import {render, RenderPosition} from '../framework/render.js';
 import PointPresenter from './point-presenter.js';
+import {updateItem} from '../utils/common.js';
 
 export default class BoardPresenter {
-  #container;
-  #pointsModel;
+  #container = null;
+  #pointsModel = null;
 
   #sortComponent = new SortView();
   #editListComponent = new EditListView();
   #noPointComponent = new NoPointView();
   #boardPoints = [];
+  #pointPresenters = new Map();
 
   constructor({ container, pointsModel }) {
     this.#container = container;
@@ -23,9 +25,29 @@ export default class BoardPresenter {
     this.#renderBoard();
   }
 
+  #handleModeChange = () => {
+    this.#pointPresenters.forEach((presenter) => presenter.resetView());
+  };
+
+  #handlePointChange = (updatedPoint) => {
+    this.#boardPoints = updateItem(this.#boardPoints, updatedPoint);
+    this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
+  };
+
   #renderPoint(point) {
-    const pointPresenter = new PointPresenter({container: this.#editListComponent.element, pointsModel: this.#pointsModel});
+    const pointPresenter = new PointPresenter({
+      container: this.#editListComponent.element,
+      pointsModel: this.#pointsModel,
+      onDataChange: this.#handlePointChange,
+      onModeChange: this.#handleModeChange
+    });
     pointPresenter.init(point);
+    this.#pointPresenters.set(point.id, pointPresenter);
+  }
+
+  #clearPoints() {
+    this.#pointPresenters.forEach((presenter) => presenter.destroy());
+    this.#pointPresenters.clear();
   }
 
   #renderSort() {

@@ -1,4 +1,4 @@
-const POINT_COUNT = 4;
+const POINT_COUNT = 2;
 const DATE_FORMAT = 'DD/MM/YY HH:mm';
 const SHORT_DATE_FORMAT = 'MMM DD';
 const TIME_FORMAT = 'HH:mm';
@@ -9,4 +9,9 @@ const FilterType = {
   PRESENT: 'present',
   PAST: 'past'
 };
-export { FilterType, CITY_NAMES, POINT_COUNT, DATE_FORMAT, SHORT_DATE_FORMAT, TIME_FORMAT};
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
+
+export { Mode, FilterType, CITY_NAMES, POINT_COUNT, DATE_FORMAT, SHORT_DATE_FORMAT, TIME_FORMAT};
