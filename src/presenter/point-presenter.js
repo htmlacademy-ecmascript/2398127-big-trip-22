@@ -35,11 +35,12 @@ export default class PointPresenter {
 
     this.#formEditComponent = new EditFormView({
       point: this.#point,
-      destination: this.#pointsModel.getDestinationById(this.#point.destination),
+      availableDestinations: this.#pointsModel.destinations,
       checkedOffers: [...this.#pointsModel.getOfferById(this.#point.type, this.#point.offers)],
-      offers: this.#pointsModel.getOfferByType(this.#point.type),
+      availableOffers: this.#pointsModel.offers,
       onFormSubmit: this.#handleFormSubmit,
       onClickEdit: this.#handleFormClose,
+      pointsModel: this.#pointsModel
     });
 
     if(prevPointComponent === null || prevFormEditComponent === null) {
@@ -63,6 +64,7 @@ export default class PointPresenter {
 
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
+      this.#formEditComponent.reset(this.#point);
       this.#replaceFormToPoint();
     }
   }
@@ -83,16 +85,19 @@ export default class PointPresenter {
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
+      this.#formEditComponent.reset(this.#point);
       this.#replaceFormToPoint();
       document.removeEventListener('keydown', this.#escKeyDownHandler);
     }
   };
 
   #handleEditClick = () => {
+    this.#formEditComponent.reset(this.#point);
     this.#replacePointToForm();
   };
 
   #handleFormClose = () => {
+    this.#formEditComponent.reset(this.#point);
     this.#replaceFormToPoint();
   };
 

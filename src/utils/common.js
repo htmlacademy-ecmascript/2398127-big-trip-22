@@ -18,7 +18,7 @@ const sortByPrice = (pointB, pointA) => pointA.price - pointB.price;
 function updateItem(items, update) {
   return items.map((item) => item.id === update.id ? update : item);
 }
+const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 
-
-export { sortByDay, sortByTime, sortByPrice, updateItem, isFuture, isPresent, isPast, getRandomArrayElement, humanizePointsDate, humanizeShortDate, humanizeTime };
+export { capitalizeFirstLetter, sortByDay, sortByTime, sortByPrice, updateItem, isFuture, isPresent, isPast, getRandomArrayElement, humanizePointsDate, humanizeShortDate, humanizeTime };
 

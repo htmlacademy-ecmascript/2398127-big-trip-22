@@ -39,6 +39,16 @@ const pointsMock = [
     price: 5000,
     offers: ['102'],
     isFavorite: false,
+  },
+  {
+    id: '5',
+    type: 'taxi',
+    destination: '4',
+    startDate: new Date('2022-08-23T17:00'),
+    endDate: new Date('2022-08-29T18:00'),
+    price: 6000,
+    offers: ['101'],
+    isFavorite: false,
   }
 ];
 

@@ -1,16 +1,16 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizePointsDate } from '../utils/common.js';
-import { pointsMock } from '../mock/points.js';
-import { CITY_NAMES } from '../const.js';
+import { capitalizeFirstLetter } from '../utils/common.js';
+import { CITY_NAMES, EVENT_TYPES } from '../const.js';
 const createCitiesTemplate = () => CITY_NAMES.map((city) => `<option value="${city}"></option>`).join('');
 
-const createTypeTemplate = (type) => pointsMock.map((point) => {
-  const pointChecked = type === point.type;
+const createTypeTemplate = (checkedType) => EVENT_TYPES.map((type, id) => {
+  const isChecked = type === checkedType;
   return (
     `
     <div class="event__type-item">
-    <input id="event-type-${point.id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${point.type}" ${pointChecked ? 'checked' : ''}>
-    <label class="event__type-label  event__type-label--${point.type}" for="event-type-${point.id}">${point.type}</label>
+    <input id="event-type-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${isChecked ? 'checked' : ''}>
+    <label class="event__type-label  event__type-label--${type}" for="event-type-${id}">${capitalizeFirstLetter(type)}</label>
     </div>
     `
   );
@@ -32,10 +32,12 @@ const createOffersTemplate = (offersByType, checkedOffers) =>
     `;
   }).join('');
 
-const createFormEditTemplate = (point, destination, offersByType, checkedOffers) => {
+const createFormEditTemplate = (point, destinations, offers, checkedOffers) => {
   const { startDate, endDate, type, price, id} = point;
-  const { name, description } = destination;
-  const isOffersExist = offersByType && offersByType.offers && offersByType.offers.length > 0;
+  const destination = destinations.find((destinationFromList) => destinationFromList.id === point.destination);
+  const {pictures, description, name} = destination;
+  const offersByType = offers.find((offer) => offer.type === point.type);
+  const isOffersExist = offersByType && offersByType.offers.length > 0;
   const offersTemplate = isOffersExist ? createOffersTemplate(offersByType.offers, checkedOffers) : '';
   return (
     `
@@ -58,11 +60,11 @@ const createFormEditTemplate = (point, destination, offersByType, checkedOffers)
                   </div>
 
                   <div class="event__field-group  event__field-group--destination">
-                    <label class="event__label  event__type-output" for="event-destination-${id}">
+                    <label class="event__label  event__type-output" for="event-destination-${destination.id}">
                       ${type}
                     </label>
-                    <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${name}" list="destination-list-${id}">
-                    <datalist id="destination-list-${id}">
+                    <input class="event__input  event__input--destination" id="event-destination-${destination.id}" type="text" name="event-destination" value="${name}" list="destination-list-${destination.id}">
+                    <datalist id="destination-list-${destination.id}">
                       ${createCitiesTemplate()}
                     </datalist>
                   </div>
@@ -100,6 +102,11 @@ const createFormEditTemplate = (point, destination, offersByType, checkedOffers)
                   <section class="event__section  event__section--destination">
                     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
                     <p class="event__destination-description">${description}</p>
+                    <div class="event__photos-container">
+                      <div class="event__photos-tape">
+                      ${pictures.map(({ description: descriptionPicture, src }) => `<img class="event__photo" src="${src}" alt="${descriptionPicture}">`).join('')}
+                      </div>
+                  </div>
                   </section>
                 </section>
       </form>
@@ -108,37 +115,100 @@ const createFormEditTemplate = (point, destination, offersByType, checkedOffers)
   );
 };
 
-export default class EditFormView extends AbstractView {
-  #point;
-  #destination;
-  #offers;
-  #checkedOffers;
-  #handleFormSubmit;
-  #handleEditClick;
+export default class EditFormView extends AbstractStatefulView {
+  #availableOffers = null;
+  #checkedOffers = null;
+  #handleFormSubmit = null;
+  #handleEditClick = null;
+  #availableDestinations = null;
+  #pointsModel = null;
 
-  constructor({point, destination, offers, checkedOffers, onFormSubmit, onClickEdit}) {
+  constructor({point, availableOffers, checkedOffers, onFormSubmit, onClickEdit, availableDestinations, pointsModel}) {
     super();
-    this.#point = point;
-    this.#destination = destination;
-    this.#offers = offers;
+    this._setState(EditFormView.parsePointToState(point));
+    this.#availableDestinations = availableDestinations;
+    this.#availableOffers = availableOffers;
+    this.#pointsModel = pointsModel;
     this.#checkedOffers = checkedOffers;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleEditClick = onClickEdit;
-    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
+    this._restoreHandlers();
   }
 
   get template() {
-    return createFormEditTemplate(this.#point, this.#destination, this.#offers, this.#checkedOffers);
+    return createFormEditTemplate(this._state, this.#availableDestinations, this.#availableOffers, this.#checkedOffers);
+  }
+
+  reset(point) {
+    this.updateElement(
+      EditFormView.parsePointToState(point)
+    );
+  }
+
+  removeElement() {
+    super.removeElement();
+  }
+
+  _restoreHandlers() {
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
+    this.element.querySelector('.event--edit').addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
+    this.element.querySelector('.event__input--price').addEventListener('input', this.#priceChangeHandler);
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#eventChangeHandler);
+    this.element.querySelector('.event__available-offers').addEventListener('change', this.#offerChangeHandler);
   }
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(this.#point);
+    this.#handleFormSubmit(this.FormEditView.parseStateToPoint(this._state));
   };
 
   #editClickHandler = (evt) => {
     evt.preventDefault();
     this.#handleEditClick();
   };
+
+  #destinationChangeHandler = (evt) => {
+    evt.preventDefault();
+    if(evt.target.tagName === 'INPUT') {
+      const selectedDestination = this.#availableDestinations.find((newDestination) => newDestination.name === evt.target.value);
+      this.updateElement({
+        ...this._state,
+        destination: selectedDestination.id,
+      });
+    }
+  };
+
+  #priceChangeHandler = (evt) => {
+    evt.preventDefault();
+    this._setState({
+      price: evt.target.value
+    });
+  };
+
+  #eventChangeHandler = (evt) => {
+    evt.preventDefault();
+    const newEvent = evt.target.value;
+    const newEventOffers = this.#pointsModel.getOfferByType(newEvent).offers || [];
+    this.updateElement({
+      ...this._state,
+      type: newEvent,
+      offers: newEventOffers
+    });
+  };
+
+  #offerChangeHandler = () => {
+    const checkedOffers = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'));
+
+    this._setState({...this._state.point, offers: checkedOffers.map((offer) => offer.dataset.offerId)});
+  };
+
+  static parsePointToState(point) {
+    return {...point};
+  }
+
+  static parseStateToPoint(state) {
+    const point = {...state};
+    return point;
+  }
 }
