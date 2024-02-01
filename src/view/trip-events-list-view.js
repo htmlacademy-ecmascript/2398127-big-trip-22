@@ -1,6 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
-function createEditListTemplate () {
+function createTripEventsListTemplate () {
   return (
     `
     <ul class="trip-events__list"></ul>
@@ -8,8 +8,8 @@ function createEditListTemplate () {
   );
 }
 
-export default class EditListView extends AbstractView {
+export default class tripEventsListView extends AbstractView {
   get template() {
-    return createEditListTemplate();
+    return createTripEventsListTemplate();
   }
 }
