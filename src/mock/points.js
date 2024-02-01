@@ -1,7 +1,7 @@
-import { getRandomArrayElement } from '../utils.js';
+import { getRandomArrayElement } from '../utils/common.js';
 const pointsMock = [
   {
-    id: 1,
+    id: '1',
     type: 'taxi',
     destination: '1',
     startDate: new Date('2025-08-11T10:00'),
@@ -11,7 +11,7 @@ const pointsMock = [
     isFavourite: true,
   },
   {
-    id: 2,
+    id: '2',
     type: 'bus',
     destination: '2',
     startDate: new Date('2025-08-12T12:00'),
@@ -21,11 +21,11 @@ const pointsMock = [
     isFavourite: false,
   },
   {
-    id: 3,
+    id: '3',
     type: 'train',
     destination: '3',
-    startDate: new Date('2025-08-23T17:00'),
-    endDate: new Date('2025-08-29T18:00'),
+    startDate: new Date('2022-08-23T17:00'),
+    endDate: new Date('2022-08-29T18:00'),
     price: 3300,
     offers: [],
     isFavourite: false,
@@ -34,4 +34,4 @@ const pointsMock = [
 
 const getRandomPoint = () => getRandomArrayElement(pointsMock);
 
-export { getRandomPoint };
+export { getRandomPoint, pointsMock };
