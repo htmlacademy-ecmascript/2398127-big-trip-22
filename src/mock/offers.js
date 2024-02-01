@@ -28,6 +28,10 @@ const offersMock = [
     type: 'train',
     offers: []
   },
+  {
+    type: 'plane',
+    offers: []
+  }
 ];
 
 export {offersMock};

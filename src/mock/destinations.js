@@ -31,5 +31,16 @@ export const destinationsMock = [
         description: 'Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.'
       }
     ]
+  },
+  {
+    id: '4',
+    description: 'Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.',
+    name: 'Samara',
+    pictures: [
+      {
+        src: 'https://loremflickr.com/248/152?random=4',
+        description: 'Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.'
+      }
+    ]
   }
 ];
