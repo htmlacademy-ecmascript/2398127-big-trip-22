@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { humanizePointsDate } from '../utils.js';
 import { offersMock } from '../mock/offers.js';
 import { CITY_NAMES } from '../const.js';
@@ -36,7 +36,8 @@ const createFormEditTemplate = (point, destination, offersByType, checkedOffers)
   const offersTemplate = isOffersExist ? createOffersTemplate(offersByType.offers, checkedOffers) : '';
   return (
     `
-    <form class="event event--edit" action="#" method="post">
+    <li class="trip-events__item">
+      <form class="event event--edit" action="#" method="post">
                 <header class="event__header">
                   <div class="event__type-wrapper">
                     <label class="event__type  event__type-btn" for="event-type-toggle-${offers.id}">
@@ -98,32 +99,43 @@ const createFormEditTemplate = (point, destination, offersByType, checkedOffers)
                     <p class="event__destination-description">${description}</p>
                   </section>
                 </section>
-              </form>
+      </form>
+    </li>
     `
   );
 };
 
-export default class EditFormView {
-  constructor({point, destination, offers, checkedOffers}) {
-    this.point = point;
-    this.destination = destination;
-    this.offers = offers;
-    this.checkedOffers = checkedOffers;
+export default class EditFormView extends AbstractView {
+  #point;
+  #destination;
+  #offers;
+  #checkedOffers;
+  #handleFormSubmit;
+  #handleEditClick;
+
+  constructor({point, destination, offers, checkedOffers, onFormSubmit, onClickEdit}) {
+    super();
+    this.#point = point;
+    this.#destination = destination;
+    this.#offers = offers;
+    this.#checkedOffers = checkedOffers;
+    this.#handleFormSubmit = onFormSubmit;
+    this.#handleEditClick = onClickEdit;
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
   }
 
-  getTemplate() {
-    return createFormEditTemplate(this.point, this.destination, this.offers, this.checkedOffers);
+  get template() {
+    return createFormEditTemplate(this.#point, this.#destination, this.#offers, this.#checkedOffers);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  };
 
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleEditClick();
+  };
 }

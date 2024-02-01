@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { humanizeTime, humanizeShortDate } from '../utils.js';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
@@ -18,7 +18,7 @@ const createPointTemplate = (point, destination, offers) => {
   const {startDate, endDate, type, price, isFavourite} = point;
   const {name} = destination;
   const offerTemplate = createOffersTemplate(offers);
-  const tripDuration = dayjs.duration(dayjs(startDate).diff(dayjs(endDate)));
+  const tripDuration = dayjs.duration(dayjs(endDate).diff(dayjs(startDate)));
   const tripDurationFormat = `${tripDuration.days() > 0 ? `${tripDuration.days()}D ` : ''}${tripDuration.hours() > 0 ? `${tripDuration.hours()}H ` : ''}${tripDuration.minutes()}M`;
   const favouriteClassName = isFavourite ? 'event__favorite-btn--active' : '';
 
@@ -61,26 +61,28 @@ const createPointTemplate = (point, destination, offers) => {
   );
 };
 
-export default class PointView {
-  constructor({point, destination, offers}) {
-    this.point = point;
-    this.destination = destination;
-    this.offers = offers;
+export default class PointView extends AbstractView {
+  #point;
+  #destination;
+  #offers;
+  #handleEditClick;
+
+  constructor({point, destination, offers, onEditClick}) {
+    super();
+    this.#point = point;
+    this.#destination = destination;
+    this.#offers = offers;
+    this.#handleEditClick = onEditClick;
+
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
   }
 
-  getTemplate() {
-    return createPointTemplate(this.point, this.destination, this.offers);
+  get template() {
+    return createPointTemplate(this.#point, this.#destination, this.#offers);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleEditClick();
+  };
 }
