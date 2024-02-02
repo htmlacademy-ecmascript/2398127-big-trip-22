@@ -19,4 +19,24 @@ const SortType = {
   TIME: 'time',
   PRICE: 'price',
 };
-export { SortType, Mode, FilterType, CITY_NAMES, EVENT_TYPES, POINT_COUNT, DATE_FORMAT, SHORT_DATE_FORMAT, TIME_FORMAT};
+const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT',
+};
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
+const NEW_POINT = {
+  'type': 'flight',
+  'destination': '',
+  'startDate': null,
+  'endDate': null,
+  'price': 0,
+  'offers': [],
+  'isFavorite': false
+};
+export { NEW_POINT, UserAction, UpdateType, SortType, Mode, FilterType, CITY_NAMES, EVENT_TYPES, POINT_COUNT, DATE_FORMAT, SHORT_DATE_FORMAT, TIME_FORMAT};
