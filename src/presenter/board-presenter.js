@@ -116,7 +116,7 @@ export default class BoardPresenter {
     }
     this.#currentSortType = sortType;
     this.#clearBoard({resetRenderedPointCount: true});
-    this.#renderPoints(this.points);
+    this.#renderBoard();
   };
 
   #renderSort() {

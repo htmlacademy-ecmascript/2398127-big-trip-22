@@ -166,11 +166,11 @@ export default class EditFormView extends AbstractStatefulView {
 
   _restoreHandlers() {
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
-    this.element.querySelector('.event--edit')?.addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event--edit').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
     this.element.querySelector('.event__input--price').addEventListener('input', this.#priceChangeHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#eventChangeHandler);
-    this.element.querySelector('.event__available-offers')?.addEventListener('change', this.#offerChangeHandler);
+    this.element.querySelector('.event__available-offers').addEventListener('change', this.#offerChangeHandler);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
     this.#setDatepickers();
   }
@@ -212,7 +212,7 @@ export default class EditFormView extends AbstractStatefulView {
   #eventChangeHandler = (evt) => {
     evt.preventDefault();
     const newEvent = evt.target.value;
-    const newEventOffers = this.#pointsModel.getOfferByType(newEvent)?.offers || [];
+    const newEventOffers = this.#pointsModel.getOfferByType(newEvent).offers || [];
     this.updateElement({
       type: newEvent,
       offers: newEventOffers
