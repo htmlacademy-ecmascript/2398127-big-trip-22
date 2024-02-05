@@ -30,6 +30,11 @@ const UpdateType = {
   INIT: 'INIT',
 };
 
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
+
 const NEW_POINT = {
   'type': 'flight',
   'destination': '',
@@ -39,4 +44,4 @@ const NEW_POINT = {
   'offers': [],
   'isFavorite': false
 };
-export { NEW_POINT, UserAction, UpdateType, SortType, Mode, FilterType, CITY_NAMES, EVENT_TYPES, DATE_FORMAT, SHORT_DATE_FORMAT, TIME_FORMAT};
+export { TimeLimit, NEW_POINT, UserAction, UpdateType, SortType, Mode, FilterType, CITY_NAMES, EVENT_TYPES, DATE_FORMAT, SHORT_DATE_FORMAT, TIME_FORMAT};
