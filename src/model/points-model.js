@@ -4,9 +4,36 @@ import { offersMock } from '../mock/offers.js';
 import { getRandomPoint } from '../mock/points.js';
 import Observable from '../framework/observable.js';
 export default class PointsModel extends Observable {
+  #pointsApiService = null;
   #points = Array.from({length: POINT_COUNT}, getRandomPoint);
   #offers = offersMock;
   #destinations = destinationsMock;
+
+  constructor({pointsApiService}) {
+    super();
+    this.#pointsApiService = pointsApiService;
+
+    this.#pointsApiService.points.then((points) => {
+      console.log(points.map(this.#adaptToClient));
+
+    });
+  }
+
+  #adaptToClient(point) {
+    const adaptedPoint = {...point,
+      startDate: point['date_from'] !== null ? new Date(point['date_from']) : point['date_from'],
+      endDate: point['date_to'] !== null ? new Date(point['date_to']) : point['date_to'],
+      isFavorite: point['is_favorite'],
+      price: point['base_price']
+    };
+
+    delete adaptedPoint['date_from'];
+    delete adaptedPoint['date_to'];
+    delete adaptedPoint['is_favorite'];
+    delete adaptedPoint['base_price'];
+
+    return adaptedPoint;
+  }
 
   get points() {
     return this.#points;
