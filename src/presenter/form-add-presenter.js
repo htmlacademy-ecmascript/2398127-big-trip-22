@@ -1,7 +1,6 @@
 import { render, RenderPosition, remove } from '../framework/render.js';
 import { UserAction, UpdateType, NEW_POINT } from '../const.js';
 import EditFormView from '../view/form-edit-view.js';
-import { generateRandomId } from '../utils/common.js';
 export default class FormAddPresenter {
   #pointsModel = null;
   #pointListContainer = null;
@@ -54,13 +53,10 @@ export default class FormAddPresenter {
   }
 
   #handleFormSubmit = (point) => {
-    const randomId = generateRandomId(1000, 10000);
-
     this.#handleDataChange(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-
-      {...NEW_POINT, id: randomId, ...point},
+      point,
     );
     this.destroy();
   };

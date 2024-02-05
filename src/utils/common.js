@@ -13,6 +13,6 @@ const sortByTime = (pointA, pointB) => getPointDuration(pointA) - getPointDurati
 const sortByPrice = (pointB, pointA) => pointA.price - pointB.price;
 const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 const isDatesEqual = (dateA, dateB) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
-const generateRandomId = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-export { capitalizeFirstLetter, sortByDay, sortByTime, sortByPrice, isFuture, isPresent, isPast, humanizePointsDate, humanizeShortDate, humanizeTime, isDatesEqual, generateRandomId };
+
+export { capitalizeFirstLetter, sortByDay, sortByTime, sortByPrice, isFuture, isPresent, isPast, humanizePointsDate, humanizeShortDate, humanizeTime, isDatesEqual };
 
