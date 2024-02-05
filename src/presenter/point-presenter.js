@@ -90,6 +90,23 @@ export default class PointPresenter {
     }
   }
 
+  setAborting() {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#pointComponent.shake();
+      return;
+    }
+
+    const resetFormState = () => {
+      this.#formEditComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#formEditComponent.shake(resetFormState);
+  }
+
   #replaceFormToPoint() {
     replace(this.#pointComponent, this.#formEditComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
