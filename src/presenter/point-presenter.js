@@ -23,8 +23,8 @@ export default class PointPresenter {
   init(point) {
     this.#point = point;
 
-    const lastPointComponent = this.#pointComponent;
-    const lastFormEditComponent = this.#formEditComponent;
+    const prevPointComponent = this.#pointComponent;
+    const prevFormEditComponent = this.#formEditComponent;
 
     this.#pointComponent = new PointView({
       point: this.#point,
@@ -45,18 +45,19 @@ export default class PointPresenter {
       pointsModel: this.#pointsModel
     });
 
-    if(lastPointComponent === null || lastFormEditComponent === null) {
+    if(prevPointComponent === null || prevFormEditComponent === null) {
       render(this.#pointComponent, this.#container);
       return;
     }
     if (this.#mode === Mode.DEFAULT) {
-      replace(this.#pointComponent, lastPointComponent);
+      replace(this.#pointComponent, prevPointComponent);
     }
     if (this.#mode === Mode.EDITING) {
-      replace(this.#formEditComponent, lastFormEditComponent);
+      replace(this.#pointComponent, prevFormEditComponent);
+      this.#mode = Mode.DEFAULT;
     }
-    remove(lastPointComponent);
-    remove(lastFormEditComponent);
+    remove(prevPointComponent);
+    remove(prevFormEditComponent);
   }
 
   destroy() {
@@ -68,6 +69,24 @@ export default class PointPresenter {
     if (this.#mode !== Mode.DEFAULT) {
       this.#formEditComponent.reset(this.#point);
       this.#replaceFormToPoint();
+    }
+  }
+
+  setSaving() {
+    if (this.#mode === Mode.EDITING) {
+      this.#formEditComponent.updateElement({
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
+  }
+
+  setDeleting() {
+    if (this.#mode === Mode.EDITING) {
+      this.#formEditComponent.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
     }
   }
 
@@ -113,7 +132,6 @@ export default class PointPresenter {
       isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
       update
     );
-    this.#replaceFormToPoint();
   };
 
   #handleFavoriteClick = () => {
