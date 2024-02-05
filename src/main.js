@@ -32,3 +32,4 @@ function handleNewEventButtonClick() {
 render(newEventButtonComponent, tripMain, RenderPosition.BEFOREEND);
 boardPresenter.init();
 filterPresenter.init();
+pointsModel.init();

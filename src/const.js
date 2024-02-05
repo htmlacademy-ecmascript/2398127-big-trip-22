@@ -1,4 +1,3 @@
-const POINT_COUNT = 2;
 const DATE_FORMAT = 'DD/MM/YY HH:mm';
 const SHORT_DATE_FORMAT = 'MMM DD';
 const TIME_FORMAT = 'HH:mm';
@@ -39,4 +38,4 @@ const NEW_POINT = {
   'offers': [],
   'isFavorite': false
 };
-export { NEW_POINT, UserAction, UpdateType, SortType, Mode, FilterType, CITY_NAMES, EVENT_TYPES, POINT_COUNT, DATE_FORMAT, SHORT_DATE_FORMAT, TIME_FORMAT};
+export { NEW_POINT, UserAction, UpdateType, SortType, Mode, FilterType, CITY_NAMES, EVENT_TYPES, DATE_FORMAT, SHORT_DATE_FORMAT, TIME_FORMAT};
