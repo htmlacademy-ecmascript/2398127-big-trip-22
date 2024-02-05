@@ -29,7 +29,9 @@ function handleNewEventButtonClick() {
   boardPresenter.createPoint();
   newEventButtonComponent.element.disabled = true;
 }
-render(newEventButtonComponent, tripMain, RenderPosition.BEFOREEND);
+
 boardPresenter.init();
 filterPresenter.init();
-pointsModel.init();
+pointsModel.init().finally(() => {
+  render(newEventButtonComponent, tripMain, RenderPosition.BEFOREEND);
+});
