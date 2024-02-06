@@ -6,15 +6,17 @@ export default class FormAddPresenter {
   #pointListContainer = null;
   #handleDataChange = null;
   #handleDestroy = null;
+  #handleCancel = null;
   #availableDestinations = null;
   #availableOffers = null;
   #editFormComponent = null;
 
-  constructor({pointsModel, pointListContainer, onDataChange, onDestroy, availableDestinations, availableOffers }) {
+  constructor({pointsModel, pointListContainer, onDataChange, onDestroy, onCancelClick, availableDestinations, availableOffers }) {
     this.#pointsModel = pointsModel;
     this.#pointListContainer = pointListContainer;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
+    this.#handleCancel = onCancelClick;
     this.#availableDestinations = availableDestinations;
     this.#availableOffers = availableOffers;
   }
@@ -27,12 +29,12 @@ export default class FormAddPresenter {
     this.#editFormComponent = new EditFormView({
       point: point,
       pointsModel: this.#pointsModel,
-      availableDestinations: this.#availableDestinations || [],
+      availableDestinations: this.#availableDestinations,
       availableOffers: this.#availableOffers || [],
       checkedOffers: [],
       onEditClick: this.#handleCloseClick,
       onFormSubmit: this.#handleFormSubmit,
-      onDeleteClick: this.#handleDeleteClick,
+      onDeleteClick: this.#handleCancelClick,
       isNew: true
     });
     render(this.#editFormComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
@@ -44,18 +46,19 @@ export default class FormAddPresenter {
       return;
     }
 
-    this.#handleDestroy();
+    if (this.#handleDestroy) {
+      this.#handleDestroy();
+    }
 
     remove(this.#editFormComponent);
     this.#editFormComponent = null;
-
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
   setSaving() {
     this.#editFormComponent.updateElement({
       isDisabled: true,
-      isSaving: true,
+      isSaving: true
     });
   }
 
@@ -64,7 +67,7 @@ export default class FormAddPresenter {
       this.#editFormComponent.updateElement({
         isDisabled: false,
         isSaving: false,
-        isDeleting: false,
+        isDeleting: false
       });
     };
 
@@ -81,16 +84,19 @@ export default class FormAddPresenter {
 
   #handleCloseClick = () => {
     this.destroy();
+    this.#handleCancel?.();
   };
 
-  #handleDeleteClick = () => {
+  #handleCancelClick = () => {
     this.destroy();
+    this.#handleCancel?.();
   };
 
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       this.destroy();
+      this.#handleCancel?.();
     }
   };
 }

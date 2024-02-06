@@ -22,10 +22,8 @@ export default class PointPresenter {
 
   init(point) {
     this.#point = point;
-
     const prevPointComponent = this.#pointComponent;
     const prevFormEditComponent = this.#formEditComponent;
-
     this.#pointComponent = new PointView({
       point: this.#point,
       destination: this.#pointsModel.getDestinationById(this.#point.destination),
@@ -90,12 +88,24 @@ export default class PointPresenter {
     }
   }
 
-  setAborting() {
+  setFavoring() {
     if (this.#mode === Mode.DEFAULT) {
-      this.#pointComponent.shake();
+      this.#pointComponent.updateElement({
+        isDisabled: true,
+      });
+    }
+  }
+
+  setAborting() {
+    const resetPointState = () => {
+      this.#pointComponent.updateElement({
+        isDisabled: false
+      });
+    };
+    if (this.#mode === Mode.DEFAULT) {
+      this.#pointComponent.shake(resetPointState);
       return;
     }
-
     const resetFormState = () => {
       this.#formEditComponent.updateElement({
         isDisabled: false,
@@ -103,7 +113,6 @@ export default class PointPresenter {
         isDeleting: false,
       });
     };
-
     this.#formEditComponent.shake(resetFormState);
   }
 
@@ -152,6 +161,7 @@ export default class PointPresenter {
   };
 
   #handleFavoriteClick = () => {
+    this.setFavoring();
     this.#handleDataChange(
       UserAction.UPDATE_POINT,
       UpdateType.PATCH,
