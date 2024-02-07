@@ -11,6 +11,11 @@ const offersMock = [
         id: '102',
         title: 'Add meal',
         price: 15
+      },
+      {
+        id: '103',
+        title: 'Choose seats',
+        price: 5
       }
     ]
   },
@@ -26,10 +31,6 @@ const offersMock = [
   },
   {
     type: 'train',
-    offers: []
-  },
-  {
-    type: 'plane',
     offers: []
   }
 ];
