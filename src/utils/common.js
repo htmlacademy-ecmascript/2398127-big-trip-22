@@ -1,10 +1,7 @@
 import dayjs from 'dayjs';
 import { DATE_FORMAT, SHORT_DATE_FORMAT, TIME_FORMAT } from '../const.js';
 
-function getRandomArrayElement(item) {
-  return item[Math.floor(Math.random() * item.length)];
-}
-
+const getRandomArrayElement = (item) => item[Math.floor(Math.random() * item.length)];
 const humanizePointsDate = (date) => dayjs(date).format(DATE_FORMAT);
 const humanizeShortDate = (date) => dayjs(date).format(SHORT_DATE_FORMAT).toUpperCase();
 const humanizeTime = (date) => dayjs(date).format(TIME_FORMAT);
@@ -15,10 +12,8 @@ const getPointDuration = (point) => dayjs(point.startDate).diff(dayjs(point.endD
 const sortByDay = (pointA, pointB) => dayjs(pointA.startDate).diff(dayjs(pointB.startDate));
 const sortByTime = (pointA, pointB) => getPointDuration(pointA) - getPointDuration(pointB);
 const sortByPrice = (pointB, pointA) => pointA.price - pointB.price;
-function updateItem(items, update) {
-  return items.map((item) => item.id === update.id ? update : item);
-}
 const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
-
-export { capitalizeFirstLetter, sortByDay, sortByTime, sortByPrice, updateItem, isFuture, isPresent, isPast, getRandomArrayElement, humanizePointsDate, humanizeShortDate, humanizeTime };
+const isDatesEqual = (dateA, dateB) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
+const generateRandomId = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+export { capitalizeFirstLetter, sortByDay, sortByTime, sortByPrice, isFuture, isPresent, isPast, getRandomArrayElement, humanizePointsDate, humanizeShortDate, humanizeTime, isDatesEqual, generateRandomId };
 
