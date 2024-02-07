@@ -1,6 +1,8 @@
-const DATE_FORMAT = 'DD[D] HH[H] mm[M]';
-const SHORT_DATE_FORMAT = 'MMM DD';
-const TIME_FORMAT = 'HH:mm';
+const Format = {
+  DATE: 'DD[D] HH[H] mm[M]',
+  SHORT_DATE: 'MMM DD',
+  TIME: 'HH:mm',
+};
 const EVENT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 const FilterType = {
   EVERYTHING: 'everything',
@@ -44,4 +46,4 @@ const NEW_POINT = {
   'offers': [],
   'isFavorite': false
 };
-export { TimeLimit, NEW_POINT, UserAction, UpdateType, SortType, Mode, FilterType, EVENT_TYPES, DATE_FORMAT, SHORT_DATE_FORMAT, TIME_FORMAT};
+export { TimeLimit, NEW_POINT, UserAction, UpdateType, SortType, Mode, FilterType, EVENT_TYPES, Format};

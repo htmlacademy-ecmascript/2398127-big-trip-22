@@ -1,9 +1,9 @@
 import dayjs from 'dayjs';
-import { DATE_FORMAT, SHORT_DATE_FORMAT, TIME_FORMAT } from '../const.js';
+import { Format } from '../const.js';
 
-const humanizePointsDate = (date) => dayjs(date).format(DATE_FORMAT);
-const humanizeShortDate = (date) => dayjs(date).format(SHORT_DATE_FORMAT).toUpperCase();
-const humanizeTime = (date) => dayjs(date).format(TIME_FORMAT);
+const humanizePointsDate = (date) => dayjs(date).format(Format.DATE);
+const humanizeShortDate = (date) => dayjs(date).format(Format.SHORT_DATE).toUpperCase();
+const humanizeTime = (date) => dayjs(date).format(Format.TIME);
 const isFuture = (point) => dayjs().isBefore(point.startDate);
 const isPresent = (point) => dayjs().isAfter(point.startDate) && dayjs().isBefore(point.endDate);
 const isPast = (point) => dayjs().isAfter(point.endDate);
@@ -17,11 +17,11 @@ const formatTripDuration = (eventA, eventB) => {
   let tripDuration = dayjs.duration(dayjs(eventA).diff(dayjs(eventB)));
   const daysCount = Math.floor(tripDuration.asDays());
   if (daysCount > 30) {
-    const format = DATE_FORMAT.replace('DD[D] ', '');
+    const format = Format.DATE.replace('DD[D] ', '');
     tripDuration = tripDuration.format(format);
     return `${daysCount}D ${tripDuration}`;
   }
-  tripDuration = tripDuration.format(DATE_FORMAT);
+  tripDuration = tripDuration.format(Format.DATE);
   return tripDuration.replace('00D 00H ', '').replace('00D ', '');
 };
 export {formatTripDuration, capitalizeFirstLetter, sortByDay, sortByTime, sortByPrice, isFuture, isPresent, isPast, humanizePointsDate, humanizeShortDate, humanizeTime, isDatesEqual };
