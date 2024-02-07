@@ -169,7 +169,7 @@ export default class EditFormView extends AbstractStatefulView {
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
     this.element.querySelector('.event--edit')?.addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
-    this.element.querySelector('.event__input--price').addEventListener('input', this.#priceChangeHandler);
+    this.element.querySelector('.event__input--price').addEventListener('input', this.#inputPriceChangeHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#eventChangeHandler);
     this.element.querySelector('.event__available-offers')?.addEventListener('change', this.#offerChangeHandler);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
@@ -203,7 +203,7 @@ export default class EditFormView extends AbstractStatefulView {
     }
   };
 
-  #priceChangeHandler = (evt) => {
+  #inputPriceChangeHandler = (evt) => {
     evt.preventDefault();
     this._setState({
       price: evt.target.value
