@@ -31,8 +31,24 @@ const offersMock = [
   },
   {
     type: 'train',
-    offers: []
-  }
+    offers: [
+      {
+        id: '101',
+        title: 'train offer 1',
+        price: 50
+      },
+      {
+        id: '102',
+        title: 'train offer 2',
+        price: 15
+      },
+      {
+        id: '103',
+        title: 'train offer 3',
+        price: 5
+      }
+    ]
+  },
 ];
 
 export {offersMock};
