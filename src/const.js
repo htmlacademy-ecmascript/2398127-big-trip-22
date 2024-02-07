@@ -1,7 +1,6 @@
-const DATE_FORMAT = 'DD/MM/YY HH:mm';
+const DATE_FORMAT = 'DD[D] HH[H] mm[M]';
 const SHORT_DATE_FORMAT = 'MMM DD';
 const TIME_FORMAT = 'HH:mm';
-const CITY_NAMES = ['Moscow', 'st.Petersburg', 'Rostov'];
 const EVENT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 const FilterType = {
   EVERYTHING: 'everything',
@@ -28,6 +27,12 @@ const UpdateType = {
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
   INIT: 'INIT',
+  ERROR: 'ERROR'
+};
+
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
 };
 
 const NEW_POINT = {
@@ -39,4 +44,4 @@ const NEW_POINT = {
   'offers': [],
   'isFavorite': false
 };
-export { NEW_POINT, UserAction, UpdateType, SortType, Mode, FilterType, CITY_NAMES, EVENT_TYPES, DATE_FORMAT, SHORT_DATE_FORMAT, TIME_FORMAT};
+export { TimeLimit, NEW_POINT, UserAction, UpdateType, SortType, Mode, FilterType, EVENT_TYPES, DATE_FORMAT, SHORT_DATE_FORMAT, TIME_FORMAT};

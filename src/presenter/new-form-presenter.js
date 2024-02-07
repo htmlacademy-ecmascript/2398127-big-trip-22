@@ -1,21 +1,22 @@
 import { render, RenderPosition, remove } from '../framework/render.js';
 import { UserAction, UpdateType, NEW_POINT } from '../const.js';
-import EditFormView from '../view/form-edit-view.js';
-import { generateRandomId } from '../utils/common.js';
-export default class FormAddPresenter {
+import EditFormView from '../view/edit-form-view.js';
+export default class NewFormPresenter {
   #pointsModel = null;
   #pointListContainer = null;
   #handleDataChange = null;
   #handleDestroy = null;
+  #handleCancel = null;
   #availableDestinations = null;
   #availableOffers = null;
   #editFormComponent = null;
 
-  constructor({pointsModel, pointListContainer, onDataChange, onDestroy, availableDestinations, availableOffers }) {
+  constructor({pointsModel, pointListContainer, onDataChange, onDestroy, onCancelClick, availableDestinations, availableOffers }) {
     this.#pointsModel = pointsModel;
     this.#pointListContainer = pointListContainer;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
+    this.#handleCancel = onCancelClick;
     this.#availableDestinations = availableDestinations;
     this.#availableOffers = availableOffers;
   }
@@ -28,16 +29,16 @@ export default class FormAddPresenter {
     this.#editFormComponent = new EditFormView({
       point: point,
       pointsModel: this.#pointsModel,
-      availableDestinations: this.#availableDestinations || [],
+      availableDestinations: this.#availableDestinations,
       availableOffers: this.#availableOffers || [],
       checkedOffers: [],
-      onEditClick: this.#handleCloseClick,
+      onEditClick: this.#handleEditFormCloseClick,
       onFormSubmit: this.#handleFormSubmit,
-      onDeleteClick: this.#handleDeleteClick,
+      onDeleteClick: this.#onDeleteClick,
       isNew: true
     });
     render(this.#editFormComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
-    document.addEventListener('keydown', this.#escKeyDownHandler);
+    document.addEventListener('keydown', this.#onEscKeyDown);
   }
 
   destroy() {
@@ -45,38 +46,57 @@ export default class FormAddPresenter {
       return;
     }
 
-    this.#handleDestroy();
+    if (this.#handleDestroy) {
+      this.#handleDestroy();
+    }
 
     remove(this.#editFormComponent);
     this.#editFormComponent = null;
+    document.removeEventListener('keydown', this.#onEscKeyDown);
+  }
 
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
+  setSaving() {
+    this.#editFormComponent.updateElement({
+      isDisabled: true,
+      isSaving: true
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this.#editFormComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    this.#editFormComponent.shake(resetFormState);
   }
 
   #handleFormSubmit = (point) => {
-    const randomId = generateRandomId(1000, 10000);
-
     this.#handleDataChange(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-
-      {...NEW_POINT, id: randomId, ...point},
+      point,
     );
-    this.destroy();
   };
 
-  #handleCloseClick = () => {
+  #handleEditFormCloseClick = () => {
     this.destroy();
+    this.#handleCancel?.();
   };
 
-  #handleDeleteClick = () => {
+  #onDeleteClick = () => {
     this.destroy();
+    this.#handleCancel?.();
   };
 
-  #escKeyDownHandler = (evt) => {
+  #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       this.destroy();
+      this.#handleCancel?.();
     }
   };
 }
