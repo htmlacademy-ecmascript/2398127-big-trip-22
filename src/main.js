@@ -6,7 +6,7 @@ import PointsModel from './model/points-model.js';
 import FilterModel from './model/filter-model.js';
 import NewEventButtonView from './view/new-event-button-view.js';
 import PointsApiService from './points-api-service.js';
-
+import { UpdateType } from './const.js';
 const AUTORIZATION = 'Basic j9fwj40br4up2dfz';
 const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';
 
@@ -15,7 +15,7 @@ const tripMain = document.querySelector('.trip-main');
 const tripFilters = document.querySelector('.trip-controls__filters');
 const pointsModel = new PointsModel({pointsApiService: new PointsApiService(END_POINT, AUTORIZATION)});
 const filterModel = new FilterModel();
-const boardPresenter = new BoardPresenter({container: tripEvents, pointsModel, filterModel, onNewPointDestroy: handleNewEventFormClose});
+const boardPresenter = new BoardPresenter({container: tripEvents, pointsModel, filterModel, onNewFormDestroy: handleNewEventFormClose});
 const filterPresenter = new FilterPresenter({filterContainer: tripFilters, filterModel, pointsModel});
 
 render(new TripInfoView(), tripMain, RenderPosition.AFTERBEGIN);
@@ -29,6 +29,14 @@ function handleNewEventButtonClick() {
   boardPresenter.createPoint();
   newEventButtonComponent.element.disabled = true;
 }
+
+pointsModel.addObserver((updateType) => {
+  if (updateType === UpdateType.INIT) {
+    newEventButtonComponent.element.disabled = false;
+  } else if (updateType === UpdateType.ERROR) {
+    newEventButtonComponent.element.disabled = true;
+  }
+});
 
 boardPresenter.init();
 filterPresenter.init();
