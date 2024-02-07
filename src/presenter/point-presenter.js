@@ -22,8 +22,8 @@ export default class PointPresenter {
   init(point) {
     this.#point = point;
 
-    const prevPointComponent = this.#pointComponent;
-    const prevFormEditComponent = this.#formEditComponent;
+    const lastPointComponent = this.#pointComponent;
+    const lastFormEditComponent = this.#formEditComponent;
 
     this.#pointComponent = new PointView({
       point: this.#point,
@@ -43,18 +43,18 @@ export default class PointPresenter {
       pointsModel: this.#pointsModel
     });
 
-    if(prevPointComponent === null || prevFormEditComponent === null) {
+    if(lastPointComponent === null || lastFormEditComponent === null) {
       render(this.#pointComponent, this.#container);
       return;
     }
     if (this.#mode === Mode.DEFAULT) {
-      replace(this.#pointComponent, prevPointComponent);
+      replace(this.#pointComponent, lastPointComponent);
     }
     if (this.#mode === Mode.EDITING) {
-      replace(this.#formEditComponent, prevFormEditComponent);
+      replace(this.#formEditComponent, lastFormEditComponent);
     }
-    remove(prevPointComponent);
-    remove(prevFormEditComponent);
+    remove(lastPointComponent);
+    remove(lastFormEditComponent);
   }
 
   destroy() {

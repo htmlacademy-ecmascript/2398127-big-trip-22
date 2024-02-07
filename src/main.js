@@ -1,4 +1,4 @@
-import InfoView from './view/info-view.js';
+import TripInfoView from './view/trip-info-view.js';
 import FilterView from './view/filter-view.js';
 import BoardPresenter from './presenter/board-presenter.js';
 import { render, RenderPosition } from './framework/render.js';
@@ -11,6 +11,6 @@ const pointsModel = new PointsModel();
 const boardPresenter = new BoardPresenter({container: tripEvents, pointsModel});
 
 const filters = generateFilter(pointsModel.points);
-render(new InfoView(), tripMain, RenderPosition.AFTERBEGIN);
+render(new TripInfoView(), tripMain, RenderPosition.AFTERBEGIN);
 render(new FilterView({filters}), tripFilters);
 boardPresenter.init();

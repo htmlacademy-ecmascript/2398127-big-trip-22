@@ -1,5 +1,5 @@
 import SortView from '../view/sort-view.js';
-import EditListView from '../view/list-edit-view.js';
+import TripEventsListView from '../view/trip-events-list-view.js';
 import NoPointView from '../view/no-point-view.js';
 import {render, RenderPosition} from '../framework/render.js';
 import PointPresenter from './point-presenter.js';
@@ -10,7 +10,7 @@ export default class BoardPresenter {
   #container = null;
   #pointsModel = null;
   #sortComponent = null;
-  #editListComponent = new EditListView();
+  #tripEventsListComponent = new TripEventsListView();
   #noPointComponent = new NoPointView();
   #boardPoints = [];
   #pointPresenters = new Map();
@@ -41,7 +41,7 @@ export default class BoardPresenter {
 
   #renderPoint(point) {
     const pointPresenter = new PointPresenter({
-      container: this.#editListComponent.element,
+      container: this.#tripEventsListComponent.element,
       pointsModel: this.#pointsModel,
       onDataChange: this.#handlePointChange,
       onModeChange: this.#handleModeChange
@@ -84,8 +84,8 @@ export default class BoardPresenter {
     render(this.#sortComponent, this.#container, RenderPosition.AFTERBEGIN);
   }
 
-  #renderListEdit() {
-    render(this.#editListComponent, this.#container);
+  #renderTripEventsList() {
+    render(this.#tripEventsListComponent, this.#container);
   }
 
   #renderPoints() {
@@ -105,7 +105,7 @@ export default class BoardPresenter {
     }
 
     this.#renderSort();
-    this.#renderListEdit();
+    this.#renderTripEventsList();
     this.#renderPoints();
   }
 }
