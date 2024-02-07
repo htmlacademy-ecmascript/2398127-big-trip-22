@@ -24,6 +24,20 @@ export default class PointsModel extends Observable {
     return this.#destinations;
   }
 
+  getOfferByType(type) {
+    return this.#offers.find((offers) => offers.type === type);
+  }
+
+  getOfferById(type, offerId) {
+    const availableOffers = this.getOfferByType(type);
+    const filteredOffers = availableOffers.offers.filter((offers) => offerId.find((id) => offers.id === id));
+    return filteredOffers;
+  }
+
+  getDestinationById(id) {
+    return this.destinations.find((destination) => destination.id === id);
+  }
+
   async init() {
     try {
       const points = await this.#pointsApiService.points;
@@ -104,19 +118,5 @@ export default class PointsModel extends Observable {
     } catch(err) {
       throw new Error('Can\'t delete point');
     }
-  }
-
-  getOfferByType(type) {
-    return this.#offers.find((offers) => offers.type === type);
-  }
-
-  getOfferById(type, offerId) {
-    const availableOffers = this.getOfferByType(type);
-    const filteredOffers = availableOffers.offers.filter((offers) => offerId.find((id) => offers.id === id));
-    return filteredOffers;
-  }
-
-  getDestinationById(id) {
-    return this.destinations.find((destination) => destination.id === id);
   }
 }

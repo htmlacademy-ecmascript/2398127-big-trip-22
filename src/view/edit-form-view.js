@@ -33,7 +33,7 @@ const createOffersTemplate = (offersByType, checkedOffers, isDisabled) =>
     `;
   }).join('');
 
-const createFormEditTemplate = (point, destinations, offers, checkedOffers, isNew = false, isSaving, isDeleting, isDisabled) => {
+const createEditFormTemplate = (point, destinations, offers, checkedOffers, isNew = false, isSaving, isDeleting, isDisabled) => {
   const { type, price, id} = point;
   const destination = destinations.find((destinationFromList) => destinationFromList.id === point.destination) || {name: '', description: '', pictures: []};
   const {pictures, description, name} = destination;
@@ -143,7 +143,7 @@ export default class EditFormView extends AbstractStatefulView {
 
   get template() {
     const { isSaving, isDeleting, isDisabled } = this._state;
-    return createFormEditTemplate(this._state, this.#availableDestinations, this.#availableOffers, this.#checkedOffers, this.isNew, isSaving, isDeleting, isDisabled);
+    return createEditFormTemplate(this._state, this.#availableDestinations, this.#availableOffers, this.#checkedOffers, this.isNew, isSaving, isDeleting, isDisabled);
   }
 
   reset(point) {
