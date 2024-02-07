@@ -7,18 +7,20 @@ import FormAddPresenter from './form-add-presenter.js';
 import {SortType, UpdateType, UserAction, FilterType, NEW_POINT} from '../const.js';
 import {sortByDay, sortByPrice, sortByTime} from '../utils/common.js';
 import { filter } from '../utils/filter.js';
-
+import LoadingView from '../view/loading-view.js';
 export default class BoardPresenter {
   #container = null;
   #pointsModel = null;
   #filterModel = null;
   #sortComponent = null;
   #tripEventsListComponent = new TripEventsListView();
+  #loadingComponent = new LoadingView();
   #noPointComponent = null;
   #pointPresenters = new Map();
   #formAddPresenter = null;
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
+  #isLoading = true;
 
   constructor({ container, pointsModel, filterModel, onNewPointDestroy }) {
     this.#container = container;
@@ -96,6 +98,11 @@ export default class BoardPresenter {
         this.#clearBoard({resetSortType: true});
         this.#renderBoard();
         break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderBoard();
+        break;
     }
   };
 
@@ -134,6 +141,10 @@ export default class BoardPresenter {
     });
   }
 
+  #renderLoading() {
+    render(this.#loadingComponent, this.#container);
+  }
+
   #renderNoPoints() {
     this.#noPointComponent = new NoPointView({filterType: this.#filterType});
     render(this.#noPointComponent, this.#container);
@@ -146,6 +157,7 @@ export default class BoardPresenter {
 
     remove(this.#sortComponent);
     remove(this.#noPointComponent);
+    remove(this.#loadingComponent);
 
     if (resetSortType) {
       this.#currentSortType = SortType.DAY;
@@ -158,6 +170,12 @@ export default class BoardPresenter {
 
   #renderBoard() {
     this.#renderTripEventsList();
+
+    if(this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
+
     const points = this.points;
     const pointCount = points.length;
 
